@@ -7,7 +7,7 @@ export const maxDuration = 30;
 export async function POST(req: Request) {
     const { prompt } = await req.json();
 
-    const result = streamText({
+    const result = await streamText({
         model: openai('gpt-4o'),
         system: `You are an expert social media strategist and ghostwriter.
     Your task is to take the provided content (text or URL) and repurpose it into a highly engaging Twitter/X thread.
@@ -22,5 +22,8 @@ export async function POST(req: Request) {
         prompt,
     });
 
-    return result.toDataStreamResponse();
+    // Return raw text stream for simple frontend fetch compatibility
+    return new Response(result.textStream, {
+        headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+    });
 }
