@@ -23,7 +23,8 @@ export default function RepurposePage() {
             })
 
             if (!response.ok) {
-                throw new Error('Failed to generate')
+                const errorText = await response.text()
+                throw new Error(errorText || 'Failed to generate')
             }
 
             // Simple stream reader
@@ -43,9 +44,9 @@ export default function RepurposePage() {
                     setResult((prev) => prev + chunk)
                 }
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error(error)
-            setResult("Error generating content. Please try again.")
+            setResult(`Error: ${error.message || "Something went wrong"}`)
         } finally {
             setLoading(false)
         }

@@ -53,6 +53,6 @@ export async function POST(req: Request) {
 
     } catch (error) {
         console.error('Error in repurpose:', error);
-        return new Response('Error generating content', { status: 500 });
+        return new Response(error instanceof Error ? error.message : 'Unknown error', { status: 500 });
     }
 }
