@@ -12,7 +12,7 @@ import { Sparkles, FileText } from "lucide-react"
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { SpotlightCard } from "@/components/ui/spotlight-card"
-import { ShimmerButton } from "@/components/ui/shimmer-button"
+import { Button } from "@/components/ui/button"
 
 interface ProjectBriefProps {
   onGenerate: (idea: string, vibe: string) => void
@@ -88,29 +88,44 @@ export function ProjectBrief({ onGenerate, isGenerating }: ProjectBriefProps) {
             </Select>
           </div>
 
-          {/* Generate Button with shimmer */}
-          <ShimmerButton
-            onClick={() => onGenerate(idea, vibe)}
+          {/* Generate Button */}
+          <Button
+            onClick={() => {
+              if (!idea) {
+                // You might want to add a toast here if you had the hook
+                return;
+              }
+              if (!vibe) {
+                return;
+              }
+              onGenerate(idea, vibe)
+            }}
             disabled={isGenerating || !idea || !vibe}
-            className="w-full"
+            className="w-full h-12 text-lg bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
             {isGenerating ? (
               <>
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+                  className="mr-2"
                 >
                   <Sparkles className="h-4 w-4" />
                 </motion.div>
-                Generating...
+                Generating Campaign...
               </>
             ) : (
               <>
-                <Sparkles className="h-4 w-4" />
+                <Sparkles className="mr-2 h-4 w-4" />
                 Generate Campaign
               </>
             )}
-          </ShimmerButton>
+          </Button>
+          {!vibe && idea && (
+            <p className="text-xs text-red-400 text-center animate-pulse">
+              Please select a vibe to continue
+            </p>
+          )}
         </div>
       </div>
     </SpotlightCard>
